@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'java-library-distribution'
+    id 'com.diffplug.spotless' version '6.13.0'
+    id 'com.github.spotbugs' version '4.7.3'
+    id 'net.ltgt.errorprone' version '2.0.2'
+}
+
+group 'com.scalar.db'
+version '1.0-SNAPSHOT'
+
+archivesBaseName = "scalardb-hbase"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+
+    // for SpotBugs
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.7.3'
+    testCompileOnly 'com.github.spotbugs:spotbugs-annotations:4.7.3'
+
+    // for Error Prone
+    errorprone 'com.google.errorprone:error_prone_core:2.10.0'
+    errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging.showStandardStreams = true
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+spotless {
+    java {
+        target 'src/*/java/**/*.java'
+        importOrder()
+        removeUnusedImports()
+        googleJavaFormat('1.7')
+    }
+}
+
+spotbugsMain.reports {
+    html.enabled = true
+}
+
+spotbugsTest.reports {
+    html.enabled = true
+}
+
